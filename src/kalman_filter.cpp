@@ -1,5 +1,3 @@
-// Includes
-
 #include "kalman_filter.h"
 
 using Eigen::MatrixXd;
