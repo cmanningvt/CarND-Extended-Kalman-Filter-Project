@@ -121,6 +121,12 @@ int main()
     	  estimate(1) = p_y;
     	  estimate(2) = v1;
     	  estimate(3) = v2;
+
+        cout << "sensor type_  = " << sensor_type << endl;
+        cout << "timestamp_    = " << timestamp << endl;
+        cout << "estimate_     = " << estimate << endl;
+        cout << "ground truth_ = " << gt_values << endl;
+        cout << endl << endl << endl;
     	  
     	  estimations.push_back(estimate);
 
