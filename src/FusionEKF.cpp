@@ -39,7 +39,7 @@ FusionEKF::FusionEKF() {
   // Measurement matrix for lidar H
   H_laser_ << 1, 0, 0, 0,
 	  0, 1, 0, 0;
-    
+
   //state covariance matrix P
 	ekf_.P_ = MatrixXd(4, 4);
 	ekf_.P_ << 1, 0, 0, 0,
@@ -151,7 +151,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     ekf_.R_ = R_radar_;
     ekf_.H_ = Hj_;
 
-    //ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
   } else {
     // Laser updates
     ekf_.R_ = R_laser_;
