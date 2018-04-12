@@ -61,7 +61,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   z_pred(0) = sqrt( x_(0)*x_(0) + x_(1)*x_(1) );
   z_pred(1) = atan2(x_(1), x_(0));
   z_pred(2) = 0.0;
-  if (fabs(z_pred(0)) > 1e-5) {
+  if (fabs(z_pred(0)) > 1e-6) {
     z_pred(2) = ( x_(0)*x_(2) + x_(1)*x_(3) ) / sqrt( x_(0)*x_(0) + x_(1)*x_(1) );
   }
 	VectorXd y = z - z_pred;
