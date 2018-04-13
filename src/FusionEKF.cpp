@@ -36,6 +36,7 @@ FusionEKF::FusionEKF() {
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
+  
   // Measurement matrix for lidar H
   H_laser_ << 1, 0, 0, 0,
 	  0, 1, 0, 0;
@@ -64,6 +65,7 @@ FusionEKF::~FusionEKF() {}
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
 
+  const float  PI = 3.14159265;
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
@@ -86,6 +88,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float rho = measurement_pack.raw_measurements_[0];
       float phi = measurement_pack.raw_measurements_[1];
       float rho_dot = measurement_pack.raw_measurements_[2];
+
+      // check to make sure phi lies between pi and -pi
+      while (phi > PI) { phi = phi - (2 *PI) ; }
+      while (phi < -PI) { phi = phi + (2 * PI); }
 
       ekf_.x_ << rho * cos(phi), rho * sin(phi), 0, 0;
     }
