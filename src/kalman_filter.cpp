@@ -55,6 +55,53 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
+	// for radar due to non linearity
+	
+	const float  PI = 3.14159265;
+	
+	// Required Calculations to check of consistency of phi to lie between pi and -pi
+	VectorXd z_copy(3);
+	z_copy << z(0), z(1), z(2);
+
+	if (z_copy(1) > PI) { z_copy(1) = z_copy(1) - (2 * PI); }
+	else if (z_copy(1) < -PI) { z_copy(1) = (2 * PI) + z_copy(1); }
+	// calculate h(x')
+	float rho = sqrt(x_(0)*x_(0) + x_(1)*x_(1));
+	float phi = atan2(x_(1), x_(0));
+	float rho_dot = 0.0;
+	if (fabs(rho) > 1e-6) { rho_dot = (x_(0)*x_(2) + x_(1) * x_(3)) / rho; }
+
+	VectorXd hx(3);
+	hx << rho, phi, rho_dot;
+
+	VectorXd y = z_copy - hx;
+
+	// check to make sure phi lies between pi and -pi
+	while (y(1) > PI) { y(1) = y(1) - (2 *PI) ; }
+	while (y(1) < -PI) { y(1) = y(1) + (2 * PI); }
+
+
+	MatrixXd Ht = H_.transpose();
+	MatrixXd S = H_ * P_ * Ht + R_;
+	MatrixXd Si = S.inverse();
+	MatrixXd PHt = P_ * Ht;
+	MatrixXd K = PHt * Si;
+
+	// New estimate
+	
+	x_ = x_ + (K * y);
+	
+	MatrixXd I = MatrixXd::Identity(x_.size(), x_.size());
+	P_ = (I - K * H_) * P_;
+
+
+}
+/*
+void KalmanFilter::UpdateEKF(const VectorXd &z) {
+  /**
+  TODO:
+    * update the state by using Extended Kalman Filter equations
+  /
   const float  PI = 3.14159265;
   
   VectorXd z_pred(3);
@@ -84,3 +131,4 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_) * P_;
 }
+*/
